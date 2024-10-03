@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import icons from "../assets/icons.png";
 import cart from "../assets/cart.png";
 import { useNavigate } from "react-router-dom";
-
+// import "./cartItems.css"
 import "./homepage.css";
 
 const userUrl = "https://dummyjson.com/products";
@@ -16,11 +16,11 @@ export default function HomePage() {
 
   const data = searchResults;
 
-
-
   const data_filter = data.filter(
     (filter: any) =>
-      filter.category === "beauty" || filter.category === "groceries"
+      filter.category === "beauty" ||
+      filter.category === "groceries" ||
+      filter.category === "electronics"
   );
 
   useEffect(() => {
@@ -31,9 +31,11 @@ export default function HomePage() {
       });
   }, []);
 
-
   const addToCart = () => {
-    setCartItems(prevItems => prevItems + 1);
+    setCartItems((prevItems) => prevItems + 1);
+  };
+  const subtractToCart = () => {
+    setCartItems((prevItems) => prevItems - 1);
   };
 
   return (
@@ -42,15 +44,15 @@ export default function HomePage() {
         <div className="top-header">
           <div className="icon">
             <img src={icons} alt="icon" />
-            <Link to="cart">Cart</Link>
           </div>
 
           <div className="cart">
-          <span className="cart-count">0</span>
-            <img src={cart} alt="cart" />
-            {cartItems > 0 && <span className="cart-count">{cartItems}</span>}
-
-
+            <span className="cart-count"></span>
+            <Link to="cart">
+              <img src={cart} alt="cart"></img>
+            </Link>
+            {cartItems && <span className="cart-count">{cartItems}</span>}
+            {/* {cartItems > 0 && <span className="cart-count">{cartItems}</span>} */}
           </div>
         </div>
 
@@ -63,19 +65,8 @@ export default function HomePage() {
       <div className="card-container">
         {data_filter.map((product: any) => (
           <div key={product.id} className="card">
-      <button onClick={addToCart}>Add to Cart</button>
-
-{/* <button onClick={(e) => setSearchResults(product)}>Add to Cart</button> */}
-
-             <button
-              onClick={(e) => {
-                setSearchResults([product as never]);
-
-                e.preventDefault();
-              }}
-            >
-            
-            </button> 
+            <button onClick={addToCart}>Add to Cart</button>
+            <button onClick={subtractToCart}>Remove from Cart</button>
 
             <img
               src={product.images}
@@ -93,10 +84,3 @@ export default function HomePage() {
     </>
   );
 }
-
-// const addToCart = (product: any) => {
-//     const [items, setItems] = useState<any[]>([]);
-//     setItems((prevItems: any[]) => [...prevItems, product]);
-// };
-
-
